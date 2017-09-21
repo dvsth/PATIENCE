@@ -62,7 +62,7 @@ for step in range(steps) :
 #--------------------- generate the plot
 fig = plt.figure()
 
-fig.suptitle('b-field particle trajectory' , fontweight='bold')
+fig.suptitle('Trajectory for a proton \n computed using \n Runge-Kutta 2 scheme \n in ' + str(steps) + " steps" , fontweight='bold')
 pltPos = fig.add_subplot(111)
 
 pltPos.grid(b=True, color='k', linestyle='--')
