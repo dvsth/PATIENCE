@@ -66,8 +66,8 @@ fig.suptitle('b-field particle trajectory' , fontweight='bold')
 pltPos = fig.add_subplot(111)
 
 pltPos.grid(b=True, color='k', linestyle='--')
-pltPos.set_xlabel('x-position (meters)')
-pltPos.set_ylabel('y-position (meters)')
+pltPos.set_xlabel('x-position (meters)' , fontweight='bold')
+pltPos.set_ylabel('y-position (meters)' , fontweight='bold')
 
 pltPos.plot(plot_pos_x , plot_pos_y , 'b-', label='path')
 pltPos.scatter(plot_pos_x[0] , plot_pos_y[0], color='k' , s=100,marker='o' , label='initial position')
