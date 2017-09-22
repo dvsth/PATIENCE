@@ -30,9 +30,6 @@ import ConfigParser
 config = ConfigParser.ConfigParser()
 config.read("config.ini")
 
-#analytical mode
-analysis_on = config.getint("analysis" , "analysis_on")
-
 # field data
 B = [ config.getfloat("field" , "B_x") , config.getfloat("field" , "B_y") , config.getfloat("field" , "B_z") ] 
 
@@ -54,19 +51,11 @@ plot_pos_x = list()
 plot_pos_y = list()
 
 #boris variables
+
 t_vector = np.multiply(charge * h / mass * 0.5 , B)
 s_vector = np.divide( np.multiply(2. , t_vector) , 1 + (np.linalg.norm(t_vector)**2))
 
-
 #--------------------- run the simulation
-
-#analysis mode
-if analysis_on == 1 :
-	plot_pos_x_aly = list()
-	plot_pos_x_aly = list()
-	larmor_radius = (mass * np.linalg.norm(vel_0))**2 / (charge *np.linalg.norm(np.cross(vel_0 , B)))
-	pos_init = pos_0
-	vel_init = vel_0
 
 #calculate the magnetic field as a function of time
 def field ( t ) :
@@ -91,41 +80,29 @@ for step in range(steps) :
 	v_minus = np.add( vel_0 , np.multiply( h/2. , a_0 ) )
 	v_prime = np.add( v_minus , np.cross( v_minus , t_vector ) )
 	v_plus = np.add( v_minus , np.cross( v_prime , s_vector ) )
-	pos_1 = positionUpdate( h , pos_0 , v_minus , v_plus )
 	
+	pos_1 = positionUpdate( h , pos_0 , v_minus , v_plus )
 	plot_pos_x.append(pos_0[0])
 	plot_pos_y.append(pos_0[1])
-
-	pos_0 = pos_1
+	
 	vel_0 = np.divide( np.add( v_minus , v_plus ) , 2.0 )
-
+	pos_0 = pos_1
+	
 #--------------------- generate the plot
 fig = plt.figure()
 
-fig.suptitle('Trajectory for a proton \n computed using Boris pusher \n in ' + str(steps) + " steps" , fontweight='bold')
+fig.suptitle('Trajectory for a proton \n computed using \n Boris pusher \n in ' + str(steps) + " steps" , fontweight='bold')
 pltPos = fig.add_subplot(111)
 
 pltPos.grid(b=True, color='k', linestyle='--')
-pltPos.set_xlabel('x-position (m)' , fontweight='bold')
-pltPos.set_ylabel('y-position (m)' , fontweight='bold')
+pltPos.set_xlabel('x-position (meters)' , fontweight='bold')
+pltPos.set_ylabel('y-position (meters)' , fontweight='bold')
 
-pltPos.plot(plot_pos_x , plot_pos_y , 'b-', label='Boris path')
-pltPos.scatter(plot_pos_x[0] ,plot_pos_y[0], color='k' , s=100,marker='o' , label='initial position')
+pltPos.plot(plot_pos_x , plot_pos_y , 'b-', label='path')
+pltPos.scatter(plot_pos_x[0] , plot_pos_y[0], color='k' , s=100,marker='o' , label='initial position')
 pltPos.scatter(plot_pos_x[-1] , plot_pos_y[-1], color='k' , s=100,marker='x' , label='final position')
-	
-#analysis mode
-if analysis_on == 1 :
-	t_arr = np.linspace(0.0, t_final, steps)
-	Bmag = np.linalg.norm(B)
-	Omega_L = charge*Bmag/mass
-	
-	x_ana = pos_init[0] + (vel_init[0]*np.sin(Omega_L*t_arr) + vel_init[1]*(1 - np.cos(Omega_L*t_arr)))/Omega_L
-	y_ana = pos_init[1] + (vel_init[0]*(np.cos(Omega_L*t_arr) - 1) + vel_init[1]*np.sin(Omega_L*t_arr))/Omega_L
-	
-	pltPos.plot(x_ana , y_ana , 'g--' , label='Analytical path')
-	pltPos.set_title('Larmor radius = ' + str(larmor_radius) + ' metres')
 
-pltPos.set_aspect('1.0')
+pltPos.set_aspect(1.0)
 plt.legend(loc='best')
 plt.show()
 
