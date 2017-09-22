@@ -74,7 +74,7 @@ for step in range(steps) :
 	
 	v_minus = np.add(vel_0 , np.multiply(h/2. , a_0))
 	v_prime = np.add(v_minus , np.cross(v_minus , t_vector))
-	v_plus = np.subtract( v_minus , np.cross(v_prime , s_vector))
+	v_plus = np.add( v_minus , np.cross(v_prime , s_vector))
 	plot_pos_x.append(pos_1[0])
 	plot_pos_y.append(pos_1[1])
 	
