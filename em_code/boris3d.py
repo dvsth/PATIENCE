@@ -20,6 +20,8 @@
 #
 # enter Boris
 
+import matplotlib as mpl
+from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 import matplotlib.pyplot as plt
 import ConfigParser
@@ -53,6 +55,7 @@ h = t_final/steps
 #storage variables for plotting
 plot_pos_x = list()
 plot_pos_y = list()
+plot_pos_z = list()
 
 #boris variables
 t_vector = np.multiply(charge * h / mass * 0.5 , B)
@@ -60,7 +63,7 @@ s_vector = np.divide( np.multiply(2. , t_vector) , 1 + (np.linalg.norm(t_vector)
 
 
 #--------------------- run the simulation
-
+larmor_radius = (mass * np.linalg.norm(vel_0))**2 / (charge *np.linalg.norm(np.cross(vel_0 , B)))
 #analysis mode
 if analysis_on == 1 :
 	plot_pos_x_aly = list()
@@ -110,29 +113,41 @@ for step in range(steps) :
 fig = plt.figure()
 
 fig.suptitle('Trajectory for a proton \n computed using Boris pusher \n in ' + str(steps) + " steps" , fontweight='bold')
-pltPos = fig.add_subplot(111)
+#pltPos = fig.add_subplot(111)
 
-pltPos.grid(b=True, color='k', linestyle='--')
-pltPos.set_xlabel('x-position (m)' , fontweight='bold')
-pltPos.set_ylabel('y-position (m)' , fontweight='bold')
+#pltPos.grid(b=True, color='k', linestyle='--')
+#pltPos.set_xlabel('x-position (m)' , fontweight='bold')
+#pltPos.set_ylabel('y-position (m)' , fontweight='bold')
 
-pltPos.plot(plot_pos_x , plot_pos_y , 'b-', label='Boris path')
-pltPos.scatter(plot_pos_x[0] ,plot_pos_y[0], color='k' , s=100,marker='o' , label='initial position')
-pltPos.scatter(plot_pos_x[-1] , plot_pos_y[-1], color='k' , s=100,marker='x' , label='final position')
+#pltPos.plot(plot_pos_x , plot_pos_y , 'b-', label='Boris path')
+#pltPos.scatter(plot_pos_x[0] ,plot_pos_y[0], color='k' , s=100,marker='o' , label='initial position')
+#pltPos.scatter(plot_pos_x[-1] , plot_pos_y[-1], color='k' , s=100,marker='x' , label='final position')
 	
 #analysis mode
-if analysis_on == 1 :
-	t_arr = np.linspace(0.0, t_final, steps)
-	Bmag = np.linalg.norm(B)
-	Omega_L = charge*Bmag/mass
-	
-	x_ana = pos_init[0] + (vel_init[0]*np.sin(Omega_L*t_arr) + vel_init[1]*(1 - np.cos(Omega_L*t_arr)))/Omega_L
-	y_ana = pos_init[1] + (vel_init[0]*(np.cos(Omega_L*t_arr) - 1) + vel_init[1]*np.sin(Omega_L*t_arr))/Omega_L
-	
-	pltPos.plot(x_ana , y_ana , 'g--' , label='Analytical path')
-	pltPos.set_title('Larmor radius = ' + str(larmor_radius) + ' metres')
+#if analysis_on == 1 :
+#	t_arr = np.linspace(0.0, t_final, steps)
+#	Bmag = np.linalg.norm(B)
+#	Omega_L = charge*Bmag/mass
+#	
+#	x_ana = pos_init[0] + (vel_init[0]*np.sin(Omega_L*t_arr) + vel_init[1]*(1 - np.cos(Omega_L*t_arr)))/Omega_L
+#	y_ana = pos_init[1] + (vel_init[0]*(np.cos(Omega_L*t_arr) - 1) + vel_init[1]*np.sin(Omega_L*t_arr))/Omega_L
+#	
+#	pltPos.plot(x_ana , y_ana , 'g--' , label='Analytical path')
+#	pltPos.set_title('Larmor radius = ' + str(larmor_radius) + ' metres')
 
-pltPos.set_aspect('1.0')
+ax = fig.gca(projection='3d')
+ax.plot(plot_pos_x, plot_pos_y, plot_pos_z, label='Boris path')
+ax.scatter(plot_pos_x[0] , plot_pos_y[0] , plot_pos_z[0] , color='k' , s=100,marker='o' , label='initial position')
+ax.scatter(plot_pos_x[-1] , plot_pos_y[-1] , plot_pos_z[-1] , color='k' , s=100,marker='x' , label='final position')
+#ax.quiver(larmor_radius , larmor_radius , 2 , B[0]*1000 , B[1]*1000, B[2]*1000 , length = 3.0, colors = (1,.5,1,1), label='B-field (not to scale)', normalize=True)
+#ax.quiver(larmor_radius , larmor_radius , 0 , E[0]*1000 , E[1]*1000, E[2]*1000 , length = 3.0, colors = (.5,1,1,1), label='E-field (not to scale)', normalize=True)
+
+ax.set_xlabel('x-position (m)' , fontweight='bold')
+ax.set_ylabel('y-position (m)' , fontweight='bold')
+ax.set_zlabel('z-position (m)' , fontweight='bold')
+ax.legend()
+
+ax.set_aspect('1.0')
 plt.legend(loc='best')
 plt.show()
 
