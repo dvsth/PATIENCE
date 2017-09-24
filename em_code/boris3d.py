@@ -47,6 +47,9 @@ charge = config.getfloat("particle" , "charge")
 pos_0 = [ config.getfloat("boundary-conditions","x_0") , config.getfloat("boundary-conditions","y_0") , config.getfloat("boundary-conditions","z_0") ]
 vel_0 = [ config.getfloat("boundary-conditions","v_x_0") , config.getfloat("boundary-conditions","v_y_0") , config.getfloat("boundary-conditions","v_z_0") ]
 
+pos_init = pos_0
+vel_init = vel_0
+	
 #time info
 steps = config.getint("time-step","steps")
 t_final = config.getfloat("time-step","t_final")
@@ -69,9 +72,7 @@ if analysis_on == 1 :
 	plot_pos_x_aly = list()
 	plot_pos_x_aly = list()
 	larmor_radius = (mass * np.linalg.norm(vel_0))**2 / (charge *np.linalg.norm(np.cross(vel_0 , B)))
-	pos_init = pos_0
-	vel_init = vel_0
-
+	
 #calculate the magnetic field as a function of time
 def field ( t ) :
 	return B
@@ -141,13 +142,18 @@ ax.scatter(plot_pos_x[0] , plot_pos_y[0] , plot_pos_z[0] , color='k' , s=100,mar
 ax.scatter(plot_pos_x[-1] , plot_pos_y[-1] , plot_pos_z[-1] , color='k' , s=100,marker='x' , label='final position')
 #ax.quiver(larmor_radius , larmor_radius , 2 , B[0]*1000 , B[1]*1000, B[2]*1000 , length = 3.0, colors = (1,.5,1,1), label='B-field (not to scale)', normalize=True)
 #ax.quiver(larmor_radius , larmor_radius , 0 , E[0]*1000 , E[1]*1000, E[2]*1000 , length = 3.0, colors = (.5,1,1,1), label='E-field (not to scale)', normalize=True)
+#ax.set_xlim(-100)
+#ax.set_ylim(-99)
+#ax.set_zlim(98)
 
-ax.set_xlabel('x-position (m)' , fontweight='bold')
-ax.set_ylabel('y-position (m)' , fontweight='bold')
-ax.set_zlabel('z-position (m)' , fontweight='bold')
+#ax.text(pos_init[0] + 1, pos_init[1] + 1, pos_init[2] + 1, 'starting position' + str(pos_init))
+
+ax.set_xlabel('x-position (m) | E = ' + str(E[0]) +  ' | B = ' + str(B[0]) , fontweight='bold')
+ax.set_ylabel('y-position (m) | E = ' + str(E[1]) +  ' | B = ' + str(B[1]) , fontweight='bold')
+ax.set_zlabel('z-position (m) | E = ' + str(E[2]) +  ' | B = ' + str(B[2]) , fontweight='bold')
 ax.legend()
 
-ax.set_aspect('1.0')
+#ax.set_aspect('equal')
 plt.legend(loc='best')
 plt.show()
 
