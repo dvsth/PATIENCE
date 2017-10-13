@@ -74,8 +74,8 @@ if analysis_on == 1 :
 	larmor_radius = (mass * np.linalg.norm(vel_0))**2 / (charge *np.linalg.norm(np.cross(vel_0 , B)))
 	
 #calculate the magnetic field as a function of time
-def field ( t ) :
-	return B
+def b_field ( t ) :
+	return np.cos(np.multiply(B, 2.0 * np.pi / 30.0))
 	
 #calculate the acceleration
 def acceleration ( EField , BField , velocity ) :
@@ -92,6 +92,8 @@ v_nminushalf = np.subtract(vel_0 , np.multiply(h/2. , a_0) )
 vel_0 = v_nminushalf
 
 for step in range(steps) :
+	#a_0 = acceleration ( E , B , vel_0 )
+	#B = b_field(time)
 	
 	v_minus = np.add( vel_0 , np.multiply( h/2. , np.multiply( charge/mass , E ) ) )
 	v_nminushalf = np.subtract( v_minus , np.multiply( charge/mass , E ) )
@@ -113,7 +115,7 @@ for step in range(steps) :
 #--------------------- generate the plot
 fig = plt.figure()
 
-fig.suptitle('Trajectory for a proton \n computed using Boris pusher \n in ' + str(steps) + " steps" , fontweight='bold')
+fig.suptitle('Trajectory in EM field \n computed using Boris pusher \n in ' + str(steps) + " steps" , fontweight='bold' , fontsize=40)
 #pltPos = fig.add_subplot(111)
 
 #pltPos.grid(b=True, color='k', linestyle='--')
@@ -138,8 +140,8 @@ fig.suptitle('Trajectory for a proton \n computed using Boris pusher \n in ' + s
 
 ax = fig.gca(projection='3d')
 ax.plot(plot_pos_x, plot_pos_y, plot_pos_z, label='Boris path')
-ax.scatter(plot_pos_x[0] , plot_pos_y[0] , plot_pos_z[0] , color='k' , s=100,marker='o' , label='initial position')
-ax.scatter(plot_pos_x[-1] , plot_pos_y[-1] , plot_pos_z[-1] , color='k' , s=100,marker='x' , label='final position')
+ax.scatter(plot_pos_x[0] , plot_pos_y[0] , plot_pos_z[0] , color='r' , s=200,marker='o' , label='initial position')
+ax.scatter(plot_pos_x[-1] , plot_pos_y[-1] , plot_pos_z[-1] , color='r' , s=200,marker='x' , label='final position')
 #ax.quiver(larmor_radius , larmor_radius , 2 , B[0]*1000 , B[1]*1000, B[2]*1000 , length = 3.0, colors = (1,.5,1,1), label='B-field (not to scale)', normalize=True)
 #ax.quiver(larmor_radius , larmor_radius , 0 , E[0]*1000 , E[1]*1000, E[2]*1000 , length = 3.0, colors = (.5,1,1,1), label='E-field (not to scale)', normalize=True)
 #ax.set_xlim(-100)
@@ -148,13 +150,13 @@ ax.scatter(plot_pos_x[-1] , plot_pos_y[-1] , plot_pos_z[-1] , color='k' , s=100,
 
 #ax.text(pos_init[0] + 1, pos_init[1] + 1, pos_init[2] + 1, 'starting position' + str(pos_init))
 
-ax.set_xlabel('x-position (m) | E = ' + str(E[0]) +  ' | B = ' + str(B[0]) , fontweight='bold')
-ax.set_ylabel('y-position (m) | E = ' + str(E[1]) +  ' | B = ' + str(B[1]) , fontweight='bold')
-ax.set_zlabel('z-position (m) | E = ' + str(E[2]) +  ' | B = ' + str(B[2]) , fontweight='bold')
+ax.set_xlabel('x-position (m) | E = ' + str(E[0]) +  ' | B = ' + str(B[0]) , fontweight='light' , fontsize=25)
+ax.set_ylabel('y-position (m) | E = ' + str(E[1]) +  ' | B = ' + str(B[1]) , fontweight='light' , fontsize=25)
+ax.set_zlabel('z-position (m) | E = ' + str(E[2]) +  ' | B = ' + str(B[2]) , fontweight='light' , fontsize=25)
 ax.legend()
 
-#ax.set_aspect('equal')
-plt.legend(loc='best')
+#ax.set_aspect(1)
+plt.legend(loc='best' , fontsize=25)
 plt.show()
 
 
