@@ -129,8 +129,7 @@ for step in range(steps) :
 	plot_pos_x.append(pos_0[0])
 	plot_pos_y.append(pos_0[1])
 	plot_pos_z.append(pos_0[2])
-	plot_time.append(time)
-	plot_field.append(E_inst[2])
+	
 	#carry over variables for next iteration
 	pos_0 = pos_1
 	vel_0 = v_nplushalf
@@ -138,55 +137,41 @@ for step in range(steps) :
 #--------------------- generate the plot
 fig = plt.figure()
 
-fig.suptitle('Trajectory in EM field \n computed using Boris pusher \n in ' + str(steps) + " steps" , fontweight='bold' , fontsize=20)
+fig.suptitle('Trajectory in EM field \n computed using Boris pusher \n in ' + str(steps) + " steps" , fontweight='bold' , fontsize=10)
 
 ax = fig.add_subplot(111, projection='3d')
+ax.text2D(0.05, 0.95, "Omega values:\nE: " + str(Omega_E) + "\nB: " + str(Omega_B), transform=ax.transAxes)
 
 ax.scatter(plot_pos_x[0] , plot_pos_y[0] , plot_pos_z[0] , color='r' , s=200,marker='o' , label='initial position')
 ax.plot(plot_pos_x, plot_pos_y, plot_pos_z, color='b', label='trajectory')
 ax.scatter(plot_pos_x[-1] , plot_pos_y[-1] , plot_pos_z[-1] , color='r' , s=200,marker='x' , label='final position')
 
+#!--TODO--!
+	#def animate(i):
+		#ax.plot(plot_pos_x[0 : i], plot_pos_y[0 : i], plot_pos_z[0 : i])
 
+		
+	#dplot = fig.add_subplot(122)
+	#dplot.plot(plot_time, plot_pos_z, 'b-', label='position')
+	#dplot.plot(plot_time, plot_field, 'r-', label='field')
+	#plt.legend(loc='best' , fontsize=20)
+	#ax.set_xlim(-100)
+	#ax.set_ylim(-99)
+	#ax.set_zlim(98)
 
+	#anim = FuncAnimation(fig, animate, frames=1)
 
-#def animate(i):
-	#ax.plot(plot_pos_x[0 : i], plot_pos_y[0 : i], plot_pos_z[0 : i])
+	#ax.text(pos_init[0] + 1, pos_init[1] + 1, pos_init[2] + 1, 'starting position' + str(pos_init))
 
-	
-#dplot = fig.add_subplot(122)
-#dplot.plot(plot_time, plot_pos_z, 'b-', label='position')
-#dplot.plot(plot_time, plot_field, 'r-', label='field')
-#plt.legend(loc='best' , fontsize=20)
-#ax.set_xlim(-100)
-#ax.set_ylim(-99)
-#ax.set_zlim(98)
+	#fig.savefig('myimage.png', format='png', dpi=1200)
 
-#anim = FuncAnimation(fig, animate, frames=1)
-
-#ax.text(pos_init[0] + 1, pos_init[1] + 1, pos_init[2] + 1, 'starting position' + str(pos_init))
-
-ax.set_xlabel('x-position (m) | E = ' + str(E[0]) +  ' | B = ' + str(B[0]) , fontweight='light' , fontsize=20)
-ax.set_ylabel('y-position (m) | E = ' + str(E[1]) +  ' | B = ' + str(B[1]) , fontweight='light' , fontsize=20)
-ax.set_zlabel('z-position (m) | E = ' + str(E[2]) +  ' | B = ' + str(B[2]) , fontweight='light' , fontsize=20)
+ax.set_xlabel('x-position (m) | E = ' + str(E[0]) +  ' | B = ' + str(B[0]) , fontweight='light' , fontsize=15)
+ax.set_ylabel('y-position (m) | E = ' + str(E[1]) +  ' | B = ' + str(B[1]) , fontweight='light' , fontsize=15)
+ax.set_zlabel('z-position (m) | E = ' + str(E[2]) +  ' | B = ' + str(B[2]) , fontweight='light' , fontsize=15)
 ax.legend()
 
 #ax.set_aspect(1)
-plt.legend(loc='best' , fontsize=20)
+plt.legend(loc='best' , fontsize=15)
 
-fig.savefig('myimage.png', format='png', dpi=1200)
 
 plt.show()
-
-
-
-	
-	
-
-
-	
-	
-
-
-
-
-
